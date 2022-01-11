@@ -1,15 +1,16 @@
 <?php
 
-require './vendor/autoload.php';
+require '../vendor/autoload.php';
 
 use ZerosDev\Prismalink\Client;
 use ZerosDev\Prismalink\Components\ProductDetails;
 
+$mode = 'development';
 $merchant_id = '';
 $key_id = '';
 $secret_key = '';
 
-$client = new Client('development', $merchant_id, $key_id, $secret_key);
+$client = new Client($mode, $merchant_id, $key_id, $secret_key);
 
 $merchantRefNo = '61dbfc41cdee9';
 $invoiceNumber = '61dbfc41ce000';
