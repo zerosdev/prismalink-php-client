@@ -1,0 +1,38 @@
+{
+    "name": "zerosdev/prismalink-php-client",
+    "description": "PHP client library for Prismalink Payment Gateway",
+    "type": "library",
+    "require": {
+        "php": ">=7.0.0",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "license": "MIT",
+    "homepage": "https://www.prismalink.co.id",
+    "support": {
+        "issues": "https://github.com/zerosdev/prismalink-php-client/issues",
+        "source": "https://github.com/zerosdev/prismalink-php-client"
+    },
+    "authors": [
+        {
+            "name": "Zeros Technology",
+            "email": "admin@zeros.co.id"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "ZerosDev\\Prismalink\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ZerosDev\\Prismalink\\Laravel\\ServiceProvider"
+            ],
+            "aliases": {
+                "Prismalink": "ZerosDev\\Prismalink\\Laravel\\Facade"
+            }
+        }
+    }
+}
