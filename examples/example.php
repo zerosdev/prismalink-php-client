@@ -1,76 +1,29 @@
 <?php
 
-require '../vendor/autoload.php';
+require './vendor/autoload.php';
 
-use ZerosDev\Durianpay\Client;
-use ZerosDev\Durianpay\Components\Customer\Customer;
-use ZerosDev\Durianpay\Components\Customer\Address as CustomerAddress;
-use ZerosDev\Durianpay\Components\Customer\Info as CustomerInfo;
-use ZerosDev\Durianpay\Components\Items;
-use ZerosDev\Durianpay\Components\Metadata;
-use ZerosDev\Durianpay\Components\Request;
+use ZerosDev\Prismalink\Client;
+use ZerosDev\Prismalink\Components\ProductDetails;
 
-$apiKey = "your_api_key_here";
+$merchant_id = '';
+$key_id = '';
+$secret_key = '';
 
-$client = new Client($apiKey);
+$client = new Client('development', $merchant_id, $key_id, $secret_key);
 
-/**
- * Make an order
- * */
-
-$order = $client->orders()
-    ->setAmount(10000)
-    ->setPaymentOption('full_payment')
-    ->setCurrency('IDR')
-    ->setOrderRefId(uniqid())
-    ->setCustomer(function (Customer $customer) {
-        $customer->setEmail('email@customer.com')
-            ->setAddress(function (CustomerAddress $address) {
-                $address->setReceiverName('Nama Penerima');
-            });
+$submit = $client->transaction()
+    ->setMerchantRefNo("61dbfc41cdee9")
+    ->setBackendCallbackUrl('https://tripay.co.id/callback/prismalink')
+    ->setFrontendCallbackUrl('https://www.prismalink.co.id/')
+    ->setUserDeviceId("61dbfc41cdef7")
+    ->setUserIpAddress("::1")
+    ->setProductDetails(function (ProductDetails $product) {
+        $product->add('P1', 'Nama Produk', 1, '10000');
     })
-    ->setItems(function (Items $items) {
-        $items->add('Nama Produk', 10000, 1, 'https://google.com/product.jpg');
-    })
-    ->setMetadata(function (Metadata $metadata) {
-        $metadata->setTes('value');
-    })
-    ->create();
+    ->setInvoiceNumber("61dbfc41ce000")
+    ->setTransactionAmount(10000)
+    ->setPaymentMethod('VA')
+    ->setIntegrationType('02')
+    ->submit();
 
-/**
- * Fetch all orders
- * */
-
-$orders = $client->orders()->fetch();
-
-/**
- * Fetch an order by id
- * */
-
-$fetch = $client->orders()->setId('ord_JGytr64yGj8')->fetch();
-
-/**
- * Charge a payment/create payment code
- * */
-
-$charge = $client->payments()
-    ->setType('VA')
-    ->setRequest(function (Request $request) {
-        $request->setOrderId('ord_JGytr64yGj8')
-            ->setBankCode('BRI')
-            ->setName('Nama')
-            ->setAmount(10000);
-    })
-    ->charge();
-
-/**
- * Fetch all payments
- **/
-
-$payments = $client->payments()->fetch();
-
-/**
- * Fetch payment by id
- **/
-
-$fetch = $client->payments()->setId('pay_JGytr64yGj8')->fetch();
+print_r($client->debugs());
